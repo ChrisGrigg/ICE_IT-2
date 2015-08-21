@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ff8400"
+    android:padding="10dp">
+
+    <ImageView android:id="@+id/img_contact"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Contacts Image"
+        android:src="@drawable/ic_profile"
+        android:paddingRight="10dp" />
+
+    <TextView android:id="@+id/fullName_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textSize="20dp"
+        android:layout_toRightOf="@+id/img_contact" />
+
+    <TextView android:id="@+id/telNumber_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Telephone Number"
+        android:textSize="20dp"
+        android:layout_toRightOf="@+id/img_contact"
+        android:layout_below="@+id/fullName_contact" />
+
+    <Button android:id="@+id/btn_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select a Contact"
+        android:layout_below="@+id/img_contact"
+        android:paddingTop="10dp" />
+
+</RelativeLayout>
