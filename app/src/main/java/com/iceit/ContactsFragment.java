@@ -1,4 +1,4 @@
-package info.androidhive.tabsswipe;
+package com.iceit;
 
 import android.content.ContentUris;
 import android.content.Intent;
@@ -14,10 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.InputStream;
+
+import info.androidhive.tabsswipe.R;
 
 public class ContactsFragment extends Fragment {
 
@@ -29,10 +32,21 @@ public class ContactsFragment extends Fragment {
 	private TextView contentContactTel;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
+		contentFullName = (TextView) rootView.findViewById(R.id.fullName_contact);
+		contentContactTel = (TextView) rootView.findViewById(R.id.telNumber_contact);
+
+		Button button = (Button) rootView.findViewById(R.id.btn_contact);
+		button.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				onClickSelectContact(v);
+			}
+		});
 
 		return rootView;
 	}
@@ -73,7 +87,7 @@ public class ContactsFragment extends Fragment {
 			imageView.setImageBitmap(photo);
 		} else {
 			Log.d(TAG, "Image not found, default will be used");
-			Drawable drawable = getResources().getDrawable(getResources().getIdentifier("ic_profile", "drawable", getActivity().getPackageName()));
+			Drawable drawable = getResources().getDrawable(getResources().getIdentifier("ic_profile", "mipmap", getActivity().getPackageName()));
 			ImageView imageView = (ImageView) getActivity().findViewById(R.id.img_contact);
 			imageView.setImageDrawable(drawable);
 		}

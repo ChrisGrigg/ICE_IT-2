@@ -1,8 +1,9 @@
-package info.androidhive.tabsswipe.adapter;
+package com.iceit.adapter;
 
-import info.androidhive.tabsswipe.ContactsFragment;
-import info.androidhive.tabsswipe.ActivationFragment;
-import info.androidhive.tabsswipe.ProfileFragment;
+import com.iceit.ActivationFragment;
+import com.iceit.ContactsFragment;
+import com.iceit.ProfileFragment;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;

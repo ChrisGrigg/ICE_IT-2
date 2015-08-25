@@ -1,4 +1,4 @@
-package info.androidhive.tabsswipe;
+package com.iceit;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,15 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ActivationFragment extends Fragment {
+import info.androidhive.tabsswipe.R;
+
+public class ProfileFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.fragment_activation, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
 		return rootView;
 	}
-
 }

@@ -11,7 +11,7 @@
         android:layout_width="70dp"
         android:adjustViewBounds="true"
         android:contentDescription="Contacts Image"
-        android:src="@drawable/ic_profile"
+        android:src="@mipmap/ic_profile"
         android:paddingRight="10dp" />
 
     <TextView android:id="@+id/fullName_contact"
