@@ -1,6 +1,8 @@
 package com.iceit;
 
 import info.androidhive.tabsswipe.R;
+
+import com.facebook.appevents.AppEventsLogger;
 import com.iceit.adapter.TabsPagerAdapter;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -58,6 +60,22 @@ public class MainActivity extends FragmentActivity implements
 			public void onPageScrollStateChanged(int arg0) {
 			}
 		});
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// Logs 'install' and 'app activate' App Events.
+		AppEventsLogger.activateApp(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		// Logs 'app deactivate' App Event.
+		AppEventsLogger.deactivateApp(this);
 	}
 
 	@Override
