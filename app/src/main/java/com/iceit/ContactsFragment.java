@@ -2,6 +2,7 @@ package com.iceit;
 
 import android.content.ContentUris;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,8 @@ public class ContactsFragment extends Fragment {
 
 	private static final String TAG = ContactsFragment.class.getSimpleName();
 	private static final int REQUEST_CODE_PICK_CONTACTS = 1;
+	public static final String CONTACTS_FILE = "ContactsFile";
+
 	private Uri uriContact;
 	private String contactID;     // contacts unique ID
 	private TextView contentFullName;
@@ -37,6 +40,7 @@ public class ContactsFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
 		contentFullName = (TextView) rootView.findViewById(R.id.fullName_contact);
 		contentContactTel = (TextView) rootView.findViewById(R.id.telNumber_contact);
+        getDBData();
 
 		Button button = (Button) rootView.findViewById(R.id.btn_contact);
 		button.setOnClickListener(new View.OnClickListener()
@@ -103,12 +107,12 @@ public class ContactsFragment extends Fragment {
 
 	private void retrieveContactNumber() {
 
-		String contactNumber = null;
+        String contactNumber = "";
 
 		// getting contacts ID
 		Cursor cursorID = getActivity().getContentResolver().query(uriContact,
-				new String[]{ContactsContract.Contacts._ID},
-				null, null, null);
+                new String[]{ContactsContract.Contacts._ID},
+                null, null, null);
 
 		if (cursorID.moveToFirst()) {
 
@@ -140,15 +144,14 @@ public class ContactsFragment extends Fragment {
 
 		if(contactNumber != null) {
 			contentContactTel.setText(contactNumber);
+			saveToDB("", contactNumber);
 		} else {
 			contentContactTel.setText("Number not found");
 		}
 	}
 
 	private void retrieveContactName() {
-
-		String contactName = null;
-
+        String contactName = "";
 		// querying contact data store
 		Cursor cursor = getActivity().getContentResolver().query(uriContact, null, null, null, null);
 
@@ -166,8 +169,39 @@ public class ContactsFragment extends Fragment {
 
 		if(contactName != null) {
 			contentFullName.setText(contactName);
+			saveToDB(contactName, "");
 		} else {
 			contentFullName.setText("Name not found, please select another contact");
 		}
 	}
+
+	private void saveToDB(String contactName, String contactNumber) {
+		// We need an Editor object to make preference changes.
+		// All objects are from android.context.Context
+		SharedPreferences settings = getActivity().getSharedPreferences(CONTACTS_FILE, 0);
+		SharedPreferences.Editor editor = settings.edit();
+
+		if(contactName != "") {
+			editor.putString("contactName", contactName);
+		}
+		if(contactNumber != "") {
+			editor.putString("contactNumber", contactNumber);
+		}
+
+		// Commit the edits!
+		editor.commit();
+	}
+
+    private void getDBData() {
+        SharedPreferences contactsFile = getActivity().getSharedPreferences(CONTACTS_FILE, 0);
+        String storedContactsName = contactsFile.getString("contactName", "");
+        String storedContactsNumber = contactsFile.getString("contactNumber", "");
+
+        if(storedContactsName != null) {
+            contentFullName.setText(storedContactsName);
+        }
+        if(storedContactsNumber != null) {
+            contentContactTel.setText(storedContactsNumber);
+        }
+    }
 }

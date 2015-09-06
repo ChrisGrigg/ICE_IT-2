@@ -1,6 +1,7 @@
 package com.iceit;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,9 +27,12 @@ public class ProfileFragment extends Fragment {
 
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
+    public static final String PROFILE_FILE = "ProfileFile";
+
     private CallbackManager callbackManager;
     private TextView info;
     private LoginButton loginButton;
+    String fullName;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +44,9 @@ public class ProfileFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         info = (TextView)rootView.findViewById(R.id.info);
+
+        getDBData();
+
         loginButton = (LoginButton)rootView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
 //        loginButton.setReadPermissions(Arrays.asList("public_profile"));
@@ -59,9 +66,11 @@ public class ProfileFragment extends Fragment {
                                 /* handle the result */
                                 try {
                                     JSONObject jObj = response.getJSONObject();
-                                    String fullName = jObj.getString("name");
+                                    fullName = jObj.getString("name");
 
                                     info.setText("Name: " + fullName);
+                                    saveToDB(fullName);
+
                                 } catch (JSONException e) {
                                     // Do something with the exception
                                     info.setText("Error: " + e.getMessage());
@@ -88,5 +97,25 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void saveToDB(String data) {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getActivity().getSharedPreferences(PROFILE_FILE, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("fullName", fullName);
+
+        // Commit the edits!
+        editor.commit();
+    }
+
+    private void getDBData() {
+        SharedPreferences fullNameFile = getActivity().getSharedPreferences(PROFILE_FILE, 0);
+        String storedFullName = fullNameFile.getString("fullName", "");
+
+        if(storedFullName != null) {
+            info.setText("Name: " + storedFullName);
+        }
     }
 }
