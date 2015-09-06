@@ -1,15 +1,14 @@
 package com.iceit;
 
-import info.androidhive.tabsswipe.R;
-
-import com.facebook.appevents.AppEventsLogger;
-import com.iceit.adapter.TabsPagerAdapter;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+
+import com.facebook.appevents.AppEventsLogger;
+import com.iceit.adapter.TabsPagerAdapter;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {

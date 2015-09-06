@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import java.io.InputStream;
 
-import info.androidhive.tabsswipe.R;
+import com.iceit.R;
 
 public class ContactsFragment extends Fragment {
 

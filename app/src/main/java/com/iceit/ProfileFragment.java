@@ -1,24 +1,33 @@
 package com.iceit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import info.androidhive.tabsswipe.R;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ProfileFragment extends Fragment {
 
     private static final String TAG = ProfileFragment.class.getSimpleName();
+
+    private CallbackManager callbackManager;
+    private TextView info;
     private LoginButton loginButton;
 
 	@Override
@@ -26,35 +35,58 @@ public class ProfileFragment extends Fragment {
 			Bundle savedInstanceState) {
 
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
-        CallbackManager callbackManager = CallbackManager.Factory.create();
+        callbackManager = CallbackManager.Factory.create();
 
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        loginButton = (LoginButton) rootView.findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
-        // If using in a fragment
+        info = (TextView)rootView.findViewById(R.id.info);
+        loginButton = (LoginButton)rootView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
-        // Other app specific specialization
+//        loginButton.setReadPermissions(Arrays.asList("public_profile"));
 
-        // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
-                Log.d(TAG, "Facebook Callback");
+//                info.setText("User ID: " + loginResult.getAccessToken().getUserId());
+                /* make the API call */
+                new GraphRequest(
+                        AccessToken.getCurrentAccessToken(),
+                        "/me",
+                        null,
+                        HttpMethod.GET,
+                        new GraphRequest.Callback() {
+                            public void onCompleted(GraphResponse response) {
+                                /* handle the result */
+                                try {
+                                    JSONObject jObj = response.getJSONObject();
+                                    String fullName = jObj.getString("name");
+
+                                    info.setText("Name: " + fullName);
+                                } catch (JSONException e) {
+                                    // Do something with the exception
+                                    info.setText("Error: " + e.getMessage());
+                                }
+                            }
+                        }
+                ).executeAsync();
             }
 
             @Override
             public void onCancel() {
-                // App code
+                info.setText("Login attempt cancelled.");
             }
 
             @Override
-            public void onError(FacebookException exception) {
-                // App code
+            public void onError(FacebookException e) {
+                info.setText("Login attempt failed.");
             }
         });
 
         return rootView;
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }
