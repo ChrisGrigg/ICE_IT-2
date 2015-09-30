@@ -1,4 +1,4 @@
-package com.iceit;
+package com.iceit.framework;
 
 import android.content.ContentUris;
 import android.content.Intent;
@@ -197,10 +197,10 @@ public class ContactsFragment extends Fragment {
         String storedContactsName = contactsFile.getString("contactName", "");
         String storedContactsNumber = contactsFile.getString("contactNumber", "");
 
-        if(storedContactsName != null) {
+        if(storedContactsName != "") {
             contentFullName.setText(storedContactsName);
         }
-        if(storedContactsNumber != null) {
+        if(storedContactsNumber != "") {
             contentContactTel.setText(storedContactsNumber);
         }
     }

@@ -1,8 +1,8 @@
-package com.iceit.adapter;
+package com.iceit.framework.adapter;
 
-import com.iceit.ActivationFragment;
-import com.iceit.ContactsFragment;
-import com.iceit.ProfileFragment;
+import com.iceit.framework.ActivationFragment;
+import com.iceit.framework.ContactsFragment;
+import com.iceit.framework.ProfileFragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

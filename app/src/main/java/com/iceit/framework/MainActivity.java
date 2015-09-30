@@ -1,4 +1,4 @@
-package com.iceit;
+package com.iceit.framework;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -8,7 +8,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
 import com.facebook.appevents.AppEventsLogger;
-import com.iceit.adapter.TabsPagerAdapter;
+import com.iceit.R;
+import com.iceit.framework.adapter.TabsPagerAdapter;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {

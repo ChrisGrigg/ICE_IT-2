@@ -1,4 +1,4 @@
-package com.iceit;
+package com.iceit.framework;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +19,7 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.iceit.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -114,7 +115,7 @@ public class ProfileFragment extends Fragment {
         SharedPreferences fullNameFile = getActivity().getSharedPreferences(PROFILE_FILE, 0);
         String storedFullName = fullNameFile.getString("fullName", "");
 
-        if(storedFullName != null) {
+        if(storedFullName != "") {
             info.setText("Name: " + storedFullName);
         }
     }
