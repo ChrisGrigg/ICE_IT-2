@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.iceit.R;
-import com.iceit.api.AccelerometerManager;
 
 public class ActivationFragment extends Fragment implements SensorEventListener {
 
