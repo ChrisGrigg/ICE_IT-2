@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#17df0d">
+    android:background="#ff8400"
+    android:padding="16dp" >
 
     <!--<TextView android:layout_width="fill_parent"-->
         <!--android:layout_height="wrap_content"-->
@@ -11,6 +12,36 @@
         <!--android:text="Design Movies Screen"-->
         <!--android:textSize="20dp"-->
         <!--android:layout_centerInParent="true"/>-->
+
+    <!-- Activate Button -->
+    <Button android:id="@+id/btnActivate"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="@string/activate"
+        android:textColor="#ffffff"
+        android:background="@color/material_blue_grey_800"
+        android:layout_marginRight="5dp"
+        />
+
+        <!-- Cancel Button -->
+    <Button android:id="@+id/btnCancel"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:layout_toRightOf="@+id/btnActivate"
+        android:textColor="#ffffff"
+        android:background="@color/material_blue_grey_800"
+        android:layout_marginLeft="5dp"
+        />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/btnActivate"
+        android:layout_marginTop="16dp"  />
+
     <!-- TODO: change to SP -->
     <TextView
         android:id="@+id/countdown_txt"
@@ -19,24 +50,8 @@
         android:textSize="70dp"
         android:text=""
         android:layout_centerHorizontal="true"
-        />
-
-    <!-- Activate Button -->
-    <Button android:id="@+id/btnActivate"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dip"
-        android:text="@string/activate"
-        android:layout_below="@+id/countdown_txt"
-        />
-
-        <!-- Cancel Button -->
-    <Button android:id="@+id/btnCancel"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dip"
-        android:text="@string/cancel"
-        android:layout_below="@+id/btnActivate"
+        android:layout_below="@+id/divider"
+        android:layout_marginTop="16dp"
         />
 
 </RelativeLayout>

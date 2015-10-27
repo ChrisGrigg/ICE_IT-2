@@ -20,12 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.iceit.R;
 import com.iceit.api.AccelerometerManager;
-
-import java.util.ArrayList;
 
 public class ActivationFragment extends Fragment implements SensorEventListener {
 
@@ -40,14 +37,13 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
     private Button btnActivate;
     private Button btnCancel;
 
-    private AccelerometerManager accelerometerManager;
-
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
     private long lastUpdate;
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 2000;
     private SoundPool _sp;
+    private int _soundId;
 
     private CountDownTimer countdown;
 
@@ -64,6 +60,7 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
         mTextView = (TextView) rootView.findViewById(R.id.countdown_txt);
 
         getDBData();
+        createBeepSample();
 
 		// TODO: check if all data exists, if none exists don't allow activate button
         btnActivate.setOnClickListener(new View.OnClickListener() {
@@ -107,14 +104,21 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
     }
 
     private void startCountdown() {
+        // turn volume on phone up to max for this purpose
+        AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        am.setStreamVolume(AudioManager.STREAM_MUSIC,
+                am.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                0);
+
         countdown =  new CountDownTimer(COUNTDOWN_LENGTH, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 mTextView.setText(String.valueOf((millisUntilFinished / 1000)));
-//                _sp.play(_soundId, 1, 1, 0, 0, 1);
+                _sp.play(_soundId, 1, 1, 0, 0, 1);
             }
 
             public void onFinish() {
+
                 mTextView.setText(R.string.smsSent);
                 mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
 
@@ -194,20 +198,18 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
         // can be safely ignored
     }
 
-//    private void createBeepSample() {
-//        _sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-//
-//        /** soundId for Later handling of sound pool **/
-//        _soundId = _sp.load(getActivity().getBaseContext(), R.raw.beep, 1); // in 2nd param u have to pass your sound
-//
-//        MediaPlayer mPlayer = MediaPlayer.create(getActivity().getBaseContext(), R.raw.beep); // in 2nd param u have to pass your sound
-//        //mPlayer.prepare();
-//        mPlayer.start();
-//
-//        // turn volume on phone up to max for this purpose
-//        AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-//        am.setStreamVolume(AudioManager.STREAM_MUSIC,
-//                am.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
-//                0);
-//    }
+    private void createBeepSample() {
+        // turn volume on phone up to max for this purpose
+        AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+
+        _sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+
+        /** soundId for Later handling of sound pool **/
+        _soundId = _sp.load(getActivity().getBaseContext(), R.raw.beep, 1); // in 2nd param u have to pass your sound
+
+        MediaPlayer mPlayer = MediaPlayer.create(getActivity().getBaseContext(), R.raw.beep); // in 2nd param u have to pass your sound
+        //mPlayer.prepare();
+        mPlayer.start();
+    }
 }
