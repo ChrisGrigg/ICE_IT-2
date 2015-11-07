@@ -3,13 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ff8400"
     android:padding="16dp" >
 
     <Button android:id="@+id/btn_contact"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Select a Contact"
+        android:text="@string/addContact"
         android:textColor="#ffffff"
         android:layout_centerHorizontal="true"
         android:background="@color/material_blue_grey_800" />

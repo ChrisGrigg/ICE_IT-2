@@ -5,5 +5,7 @@
     <string name="activate">Activate</string>
     <string name="cancel">Cancel</string>
     <string name="smsSent">SMS sent</string>
+    <string name="listening">Listening for falls and knocks</string>
+    <string name="addContact">Add a contact</string>
     <string name="facebook_app_id">544684215684444</string>
 </resources>

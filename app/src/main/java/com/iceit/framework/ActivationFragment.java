@@ -56,7 +56,7 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
         btnActivate = (Button) rootView.findViewById(R.id.btnActivate);
         btnCancel = (Button) rootView.findViewById(R.id.btnCancel);
 //        btnCancel.setVisibility(View.INVISIBLE);
-        mTextView = (TextView) rootView.findViewById(R.id.countdown_txt);
+        mTextView = (TextView) rootView.findViewById(R.id.content_txt);
 
         getDBData();
         createBeepSample();
@@ -65,6 +65,10 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
         btnActivate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startAccelorometer();
+                mTextView.setTextSize(30);
+                mTextView.setText(R.string.listening);
+                btnActivate.setEnabled(false);
+                btnCancel.setEnabled(true);
 //                btnActivate.setVisibility(View.INVISIBLE);
 //                btnCancel.setVisibility(View.VISIBLE);
             }
@@ -73,6 +77,8 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 stopCountdown();
+                btnCancel.setEnabled(false);
+                btnActivate.setEnabled(true);
 //                btnActivate.setVisibility(View.VISIBLE);
 //                btnCancel.setVisibility(View.INVISIBLE);
             }
@@ -112,6 +118,7 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
         countdown =  new CountDownTimer(COUNTDOWN_LENGTH, 1000) {
 
             public void onTick(long millisUntilFinished) {
+                mTextView.setTextSize(70);
                 mTextView.setText(String.valueOf((millisUntilFinished / 1000)));
                 _sp.play(_soundId, 1, 1, 0, 0, 1);
             }
@@ -130,6 +137,7 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
     }
 
     private void stopCountdown() {
+        mTextView.setText("");
         countdown.cancel();
     }
 
