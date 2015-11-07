@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -33,7 +34,8 @@ public class ProfileFragment extends Fragment {
     private CallbackManager callbackManager;
     private TextView info;
     private LoginButton loginButton;
-    String fullName;
+    private String fullName;
+    private SharedPreferences.Editor editor;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,11 +48,11 @@ public class ProfileFragment extends Fragment {
 
         info = (TextView)rootView.findViewById(R.id.info);
 
+        initDB();
         getDBData();
 
         loginButton = (LoginButton)rootView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
-//        loginButton.setReadPermissions(Arrays.asList("public_profile"));
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -69,7 +71,7 @@ public class ProfileFragment extends Fragment {
                                     JSONObject jObj = response.getJSONObject();
                                     fullName = jObj.getString("name");
 
-                                    info.setText("Name: " + fullName);
+//                                    info.setText("Name: " + fullName);
                                     saveToDB(fullName);
 
                                 } catch (JSONException e) {
@@ -101,14 +103,18 @@ public class ProfileFragment extends Fragment {
     }
 
     private void saveToDB(String data) {
-        // We need an Editor object to make preference changes.
-        // All objects are from android.context.Context
-        SharedPreferences settings = getActivity().getSharedPreferences(PROFILE_FILE, 0);
-        SharedPreferences.Editor editor = settings.edit();
         editor.putString("fullName", fullName);
 
         // Commit the edits!
         editor.commit();
+        getDBData();
+    }
+
+    private void initDB() {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getActivity().getSharedPreferences(PROFILE_FILE, 0);
+        editor = settings.edit();
     }
 
     private void getDBData() {
@@ -119,4 +125,16 @@ public class ProfileFragment extends Fragment {
             info.setText("Name: " + storedFullName);
         }
     }
+
+    AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
+        @Override
+        protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken2) {
+            if (accessToken2 == null) {
+                // Log out logic
+                editor.clear();
+                editor.commit();
+                info.setText("");
+            }
+        }
+    };
 }

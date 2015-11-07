@@ -65,7 +65,7 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
         btnActivate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startAccelorometer();
-                mTextView.setTextSize(30);
+                mTextView.setTextSize(25);
                 mTextView.setText(R.string.listening);
                 btnActivate.setEnabled(false);
                 btnCancel.setEnabled(true);

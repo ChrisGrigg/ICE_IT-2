@@ -41,12 +41,10 @@
         android:layout_below="@+id/btnActivate"
         android:layout_marginTop="16dp"  />
 
-    <!-- TODO: change to SP -->
     <TextView
         android:id="@+id/content_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="70dp"
         android:text=""
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/divider"
