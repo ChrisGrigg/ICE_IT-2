@@ -115,7 +115,7 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
                 am.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
                 0);
 
-        countdown =  new CountDownTimer(COUNTDOWN_LENGTH, 1000) {
+        countdown = new CountDownTimer(COUNTDOWN_LENGTH, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 mTextView.setTextSize(70);
@@ -138,7 +138,9 @@ public class ActivationFragment extends Fragment implements SensorEventListener 
 
     private void stopCountdown() {
         mTextView.setText("");
-        countdown.cancel();
+        if(countdown != null) {
+            countdown.cancel();
+        }
     }
 
     // send a distress call
