@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,6 +20,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import com.iceit.R;
@@ -33,6 +37,7 @@ public class ContactsFragment extends Fragment {
 	private String contactID;     // contacts unique ID
 	private TextView contentFullName;
 	private TextView contentContactTel;
+    private ImageView imageView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,15 +45,14 @@ public class ContactsFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
 		contentFullName = (TextView) rootView.findViewById(R.id.fullName_contact);
 		contentContactTel = (TextView) rootView.findViewById(R.id.telNumber_contact);
+        imageView = (ImageView) rootView.findViewById(R.id.img_contact);
         getDBData();
 
-		Button button = (Button) rootView.findViewById(R.id.btn_contact);
-		button.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				onClickSelectContact(v);
+        Button button = (Button) rootView.findViewById(R.id.btn_contact);
+		button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickSelectContact(v);
 			}
 		});
 
@@ -73,7 +77,6 @@ public class ContactsFragment extends Fragment {
 			retrieveContactName();
 			retrieveContactNumber();
 			retrieveContactPhoto();
-
 		}
 	}
 
@@ -87,15 +90,19 @@ public class ContactsFragment extends Fragment {
 
 		if (inputStream != null) {
 			photo = BitmapFactory.decodeStream(inputStream);
-			ImageView imageView = (ImageView) getActivity().findViewById(R.id.img_contact);
 			imageView.setImageBitmap(photo);
 		} else {
 			Log.d(TAG, "Image not found, default will be used");
-			Drawable drawable = getResources().getDrawable(getResources().getIdentifier("ic_profile", "mipmap", getActivity().getPackageName()));
-			ImageView imageView = (ImageView) getActivity().findViewById(R.id.img_contact);
-			imageView.setImageDrawable(drawable);
+            photo = BitmapFactory.decodeResource(getResources(), R.mipmap.profile);
+            imageView.setImageBitmap(photo);
 		}
 
+        try {
+            saveImageToFile(photo);
+        } catch (FileNotFoundException ex)
+        {
+            // insert code to run when exception occurs
+        }
 //            assert inputStream != null;
 //            inputStream.close();
 
@@ -104,6 +111,29 @@ public class ContactsFragment extends Fragment {
 //        }
 
 	}
+
+    private void saveImageToFile(Bitmap bitmap) throws FileNotFoundException {
+        File sdcard = Environment.getExternalStorageDirectory();
+        String photoPath = "profile.png";
+        File f = new File (sdcard, photoPath);
+        try {
+            FileOutputStream out = new FileOutputStream(f);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            saveToDB("", "", photoPath);
+        }
+        catch (FileNotFoundException ex)
+        {
+            // insert code to run when exception occurs
+        }
+    }
+
+    private void getImageFromFile(String filePath) {
+        File f = new File("/mnt/sdcard/" + filePath);
+        Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
+        if(bmp != null) {
+            imageView.setImageBitmap(bmp);
+        }
+    }
 
 	private void retrieveContactNumber() {
 
@@ -142,9 +172,9 @@ public class ContactsFragment extends Fragment {
 
 		Log.d(TAG, "Contact Phone Number: " + contactNumber);
 
-		if(contactNumber != null) {
+		if(contactNumber != "") {
 			contentContactTel.setText(contactNumber);
-			saveToDB("", contactNumber);
+			saveToDB("", contactNumber, "");
 		} else {
 			contentContactTel.setText("Number not found");
 		}
@@ -167,15 +197,15 @@ public class ContactsFragment extends Fragment {
 
 		Log.d(TAG, "Contact Name: " + contactName);
 
-		if(contactName != null) {
+		if(contactName != "") {
 			contentFullName.setText(contactName);
-			saveToDB(contactName, "");
+			saveToDB(contactName, "", "");
 		} else {
 			contentFullName.setText("Name not found, please select another contact");
 		}
 	}
 
-	private void saveToDB(String contactName, String contactNumber) {
+	private void saveToDB(String contactName, String contactNumber, String contactPhotoPath) {
 		// We need an Editor object to make preference changes.
 		// All objects are from android.context.Context
 		SharedPreferences settings = getActivity().getSharedPreferences(CONTACTS_FILE, 0);
@@ -187,6 +217,9 @@ public class ContactsFragment extends Fragment {
 		if(contactNumber != "") {
 			editor.putString("contactNumber", contactNumber);
 		}
+        if(contactPhotoPath != "") {
+            editor.putString("contactPhotoPath", contactPhotoPath);
+        }
 
 		// Commit the edits!
 		editor.commit();
@@ -196,12 +229,16 @@ public class ContactsFragment extends Fragment {
         SharedPreferences contactsFile = getActivity().getSharedPreferences(CONTACTS_FILE, 0);
         String storedContactsName = contactsFile.getString("contactName", "");
         String storedContactsNumber = contactsFile.getString("contactNumber", "");
+        String storedPhotoPath = contactsFile.getString("contactPhotoPath", "");
 
         if(storedContactsName != "") {
             contentFullName.setText(storedContactsName);
         }
         if(storedContactsNumber != "") {
             contentContactTel.setText(storedContactsNumber);
+        }
+        if(storedPhotoPath != "") {
+            getImageFromFile(storedPhotoPath);
         }
     }
 }
